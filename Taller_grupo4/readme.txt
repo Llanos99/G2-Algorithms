@@ -25,7 +25,7 @@ Sean [a, b] nuestro intervalo del input, la sucesion {x_n} generada por el algor
 es tal que |x_n - p| <= (b - a)/ 2^(n+1). Para que nuestro algoritmo pare, necesitamos
 que |x_n - x_(n-1)| < tolerance para algun n >=1. Por lo tanto, como 
 
-	|x_n - p| <= |x_n - x_(n-1)| < (b - a)/ 2^(n+1) (Los intervalos se van encajando)
+	|x_n - p| <= |x_n - x_(n-1)| <= (b - a)/ 2^(n+1) (Los intervalos se van encajando)
 
 Podemos concluir que basta con que, para algun n>=1, se satisfaga que :
 
