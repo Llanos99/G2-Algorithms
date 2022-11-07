@@ -1,0 +1,152 @@
+LABORATORIO DE REDES NEURONALES
+Algoritmos
+Universidad Nacional de Colombia
+2022-II
+
+Camilo Andres Cardenas Vargas
+Anderson Andres Llanos Quintero
+Santiago Tovar Mosquera
+Brayan Daniel Romero Ardila
+Daniel Felipe Quiroga Parra
+
+_______________________________ PUNTO 2 ____________________________________
+
+Definamos:
+
+k = número de iteraciones 
+n = el número de ejemplos de entrenamiento
+d = el número de atributos o características
+
+Durante el proceso, el cálculo del cálculo del gradiente descendiente realiza 
+una actualización de los parámetros de entrada, para encontrar un óptimo local,
+es decir, realiza d operaciones. Pero este proceso no sé realiza en un solo 
+caso, pues, se realiza una actualización para cada uno de los elementos de nuestro 
+conjunto de datos de entrenamiento. Es decir, se realizan nd operaciones. 
+
+El algoritmo de gradiente descendiente se considera un algoritmo iterativo, por 
+lo que cualquier implementación se tiene que realizar un número k veces. Por lo 
+que tenemos que el costo computacional de nuestro algoritmo es expresado de la 
+siguiente manera. [1]
+
+O(knd)
+
+Al ser una relación lineal entre los parámetros, podemos decir que todos afectan 
+de igual manera el consumo del tiempo. Sin embargo, cabe resaltar que el número 
+de datos tiende a ser el atributo que más cambia, pues en casos modernos, las redes 
+neuronales se entrenas con un número bastante grande de ejemplos, llegando a 
+complicar ciertas operaciones entre matrices, al tiempo que aumentan el tiempo 
+computacional. 
+
+
+_______________________________ PUNTO 3 ____________________________________
+
+Para realizar este experimento, primero definimos una tolerancia de 0.65, precisión 
+dada en los datos de prueba del código dado. Luego, modificamos el código para que 
+no itere un número determinado de épocas, sino que realice iteraciones hasta que el 
+modelo calcule una precisión que supere la tolerancia. Estas precisiones, sobre el 
+conjunto de datos de entrenamiento, ya que son los datos a los que la red se está 
+ajustando.
+
+========= Código ==========
+tol = 0.65  # La tolerancia de aprendizaje que definimos para nuestro modelo
+precision = 0 # Precision con la que la red neuronal hace predicciónes
+
+ult_costo = None 
+
+m,k = features.shape # Número de ejemplos de entrenamiento, número de dimensiones en los datos 
+# Inicialización de los pesos
+entrada_escondida = np.random.normal(scale = 1/k**0.5,size = (k,n_hidden))
+print(entrada_escondida)
+escondida_salida = np.random.normal(scale = 1/k**0.5,size = n_hidden)
+print(escondida_salida)
+print(entrada_escondida.shape)
+print(escondida_salida.shape)
+============================
+
+Después de correr este experimento varias veces, llegamos a la conclusión de que el número 
+de épocas necesarias para superar la tolerancia depende directamente de los pesos que se 
+inicializan en las siguientes lineas.
+
+========= Código ==========
+entrada_escondida = np.random.normal(scale = 1/k**0.5,size = (k,n_hidden))
+print(entrada_escondida)
+escondida_salida = np.random.normal(scale = 1/k**0.5,size = n_hidden)
+============================
+
+Estos valores, al ser aleatorios, afectan el desempeño de la red neuronal, de acuerdo a qué 
+tan acertados están los pesos a la solución más óptima. Por ejemplo, si inicialmente tenemos 
+los pesos de la siguiente forma:
+
+[[-0.12306309  0.31317405]
+ [-0.08645405 -0.02350285]
+ [-0.76840206 -0.23939043]
+ [ 0.33997091 -0.60476078]
+ [ 0.17315152 -0.05567747]
+ [-0.40734721 -0.05260147]]
+[ 0.69885416 -0.59842473]
+
+Teniendo los valores de la entrada de la capa escondida y los valores de la salida, 
+correspondientemente. El módelo encuentra que el número de épocas ideal para superar la 
+tolerancia es de 1184
+
+"""""""""""""""""""""
+Modelo entrenado exitosamente !
+Precisión: 0.650
+Numero de épocas:  1184
+"""""""""""""""""""""
+
+
+_______________________________ PUNTO 4 ____________________________________
+
+Para realizar el cambio de la función de activación cambiamos la función sigmoide 
+por la tangente hiperbólica que incluye la librería numpy, así como la derivada de 
+la función que se toma de la siguiente expresión.
+
+tanh'(x)=1-tanh2(x)
+
+Luego de implementar los cambios, nos ayudamos de la función np.random.seed() para 
+observar el comportamiento de las funciones de activación con los mismos parámetros 
+de entrada. Los valores de las precisiones dadas por los modelos de la función sigmoide 
+y la función tanh son expuestos en la siguiente tabla.
+
+
+seed  Sigmoide  	Tanh
+1	0.650		0.725
+2	0.650		0.650
+3	0.350		0.350
+4	0.350		0.350
+5	0.250		0.350
+6	0.350		0.350
+7	0.525		0.500
+8	0.650		0.400
+9	0.350		0.700
+10	0.675		0.350
+
+
+Como podemos observar, no existe gran diferencia entre los valores de precisión obtenidos 
+por ambos modelos, además, de que en la mayoría de los casos se obtiene una precisión 
+cercana en ambos modelos. Por otra parte, hablando de la función de costo, tenemos los 
+costos de la función sigmoide y la función tanh, respectivamente.
+
+"""""""""""""""""""""""""""""
+Costo de entrenamiento:  0.30965898521493956
+Costo de entrenamiento:  0.2907808591951554
+Costo de entrenamiento:  0.2769403554139474
+Costo de entrenamiento:  0.26673328485052494
+Costo de entrenamiento:  0.25912164031912954
+Costo de entrenamiento:  0.2533579499725873
+Costo de entrenamiento:  0.2489110846115626
+Costo de entrenamiento:  0.24540572765162427
+Costo de entrenamiento:  0.24257689979508013
+Costo de entrenamiento:  0.24023718194086569
+Precisión: 0.725
+"""""""""""""""""""""""""""""
+
+En donde si se observa una clara diferencia, en el primer caso tenemos una variación en 
+la función de error, minimizando en una taza baja. Mientras que con la segunda 
+implementación, observamos un cambio más “brusco”. Estos datos fueron tomados con una 
+semilla de aleatoriedad igual a uno.
+
+Bibliografía:
+[1] Stack Exchange (2019, Mayo). cost of gradient descent vs linear regression [Online]. 
+Available:https://stats.stackexchange.com/questions/407921/what-is-the-computational-cost-of-gradient-descent-vs-linear-regression 
